@@ -18,9 +18,15 @@ public:
     void setTime(float position) override { _time = position; }
     float getTime() const override { return _time; }
     float getLength() const override { return 0.f; }
+    void setPosition(Vector3f position) override { _position = position; }
+    Vector3f getPosition() const override { return _position; }
+    void setVelocity(Vector3f velocity) override { _velocity = velocity; }
+    Vector3f getVelocity() const override { return _velocity; }
 
 private:
     float _volume = 1.f;
     float _time = 0.f;
     bool _loop = false;
+    Vector3f _position{};
+    Vector3f _velocity{};
 };

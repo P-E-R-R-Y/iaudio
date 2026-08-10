@@ -54,6 +54,39 @@ namespace audio {
              * @return float
              */
             virtual float getVolume() const = 0;
+
+            /**
+             * @brief set the 3D position of the sound, for backends that
+             *        spatialize against a listener. A backend without real
+             *        spatial audio may just store this and keep playing at
+             *        full volume - a no-op here still leaves a usable sound,
+             *        unlike a fake 3D model with nothing to render.
+             *
+             * @param position
+             */
+            virtual void setPosition(Vector3f position) = 0;
+
+            /**
+             * @brief get the 3D position of the sound
+             *
+             * @return Vector3f
+             */
+            virtual Vector3f getPosition() const = 0;
+
+            /**
+             * @brief set the velocity of the sound, used by backends that
+             *        apply a doppler effect
+             *
+             * @param velocity
+             */
+            virtual void setVelocity(Vector3f velocity) = 0;
+
+            /**
+             * @brief get the velocity of the sound
+             *
+             * @return Vector3f
+             */
+            virtual Vector3f getVelocity() const = 0;
     };
 
 }
