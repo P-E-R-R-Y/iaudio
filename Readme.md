@@ -11,5 +11,9 @@ contract, not something bundled into the graphics module.
 
 ## IAudioModule
 
-- music -> IMusic
-- sound -> ISound
+- music -> IMusic (streams from disk, no shared buffer - one IMusic always
+  owns its own stream, same as sf::Music/LoadMusicStream)
+- sound buffer -> ISoundBuffer (loaded samples, independent of any ISound
+  that plays them - deleting every ISound built from a buffer does not
+  delete the buffer, only deleteSoundBuffer() does)
+- sound -> ISound (built from an ISoundBuffer, mirrors sf::SoundBuffer/sf::Sound)

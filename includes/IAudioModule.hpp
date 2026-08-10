@@ -14,6 +14,7 @@
 
 #include "IMusic.hpp"
 #include "ISound.hpp"
+#include "ISoundBuffer.hpp"
 
 #include "IModule.hpp"
 
@@ -24,11 +25,15 @@ public:
 
     virtual ~IAudioModule() = default;
 
-    // music
+    // music - streams from disk, no buffer to share
     virtual audio::IMusic *createMusic(std::string path) = 0;
     virtual void deleteMusic(audio::IMusic *music) = 0;
+
+    // sound buffer
+    virtual audio::ISoundBuffer *createSoundBuffer(std::string path) = 0;
+    virtual void deleteSoundBuffer(audio::ISoundBuffer *buffer) = 0;
     // sound
-    virtual audio::ISound *createSound(std::string path) = 0;
+    virtual audio::ISound *createSound(audio::ISoundBuffer *buffer) = 0;
     virtual void deleteSound(audio::ISound *sound) = 0;
 };
 

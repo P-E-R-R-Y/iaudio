@@ -10,9 +10,11 @@ TEST(AudioModuleTest, AudioObject) {
     EXPECT_STREQ(mod.type(), "audio");
 
     audio::IMusic *music = mod.createMusic("");
-    audio::ISound *sound = mod.createSound("");
-
+    audio::ISoundBuffer *buffer = mod.createSoundBuffer("gunshot.wav");
     ASSERT_NE(music, nullptr);
+    ASSERT_NE(buffer, nullptr);
+
+    audio::ISound *sound = mod.createSound(buffer);
     ASSERT_NE(sound, nullptr);
 
     music->play();
@@ -25,6 +27,15 @@ TEST(AudioModuleTest, AudioObject) {
     music->setVelocity({0, 0, 1});
     EXPECT_EQ(music->getVelocity(), Vector3f({0, 0, 1}));
 
-    mod.deleteMusic(music);
+    // deleting the sound never touches the buffer it came from
     mod.deleteSound(sound);
+
+    // buffer is still alive : play a second overlapping copy from it
+    audio::ISound *sound2 = mod.createSound(buffer);
+    ASSERT_NE(sound2, nullptr);
+    sound2->play();
+
+    mod.deleteMusic(music);
+    mod.deleteSound(sound2);
+    mod.deleteSoundBuffer(buffer);
 }
