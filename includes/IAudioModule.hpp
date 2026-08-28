@@ -7,6 +7,8 @@
  *
  * @copyright Copyright (c) 2026
  *
+ * @addtogroup iaudio
+ * @{
  */
 
 #ifndef IAUDIO_MODULE_HPP
@@ -18,10 +20,22 @@
 
 #include "IModule.hpp"
 
+
+/**
+ * @brief A vendor's audio factory : music streamed from disk, sample
+ *        buffers, and the sounds that reference them.
+ */
 class IAudioModule : public IModule {
 
 public:
+    /// Symbol the loader looks up : present = this vendor does audio
     static constexpr const char *entry = "getAudioModule";
+
+    /// Ce que type() doit rendre.
+    static constexpr const char *contract = "audio";
+
+    /** @brief Aucune sous-famille pour l'instant. */
+    static constexpr const char *accepts[] = {"audio", nullptr};
 
     virtual ~IAudioModule() = default;
 
@@ -36,5 +50,7 @@ public:
     virtual audio::ISound *createSound(audio::ISoundBuffer *buffer) = 0;
     virtual void deleteSound(audio::ISound *sound) = 0;
 };
+
+/** @} */
 
 #endif /* !IAUDIO_MODULE_HPP */
