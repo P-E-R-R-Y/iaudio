@@ -4,7 +4,7 @@
  * @brief
  * @date 2026-08-10
  *
- * @addtogroup audio
+ * @addtogroup iaudio
  * @{
  */
 
@@ -43,5 +43,7 @@ namespace audio {
     };
 
 }
+
+/** @} */
 
 #endif /* !ISOUNDBUFFER_HPP_ */

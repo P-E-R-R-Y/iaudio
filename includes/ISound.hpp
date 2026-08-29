@@ -4,7 +4,7 @@
  * @brief
  * @date 2025-09-24
  *
- * @addtogroup audio
+ * @addtogroup iaudio
  * @{
  */
 
@@ -25,19 +25,31 @@ namespace audio {
             virtual bool isReady() const = 0;
 
             /**
-             * @brief play the sound
+             * @brief Fires the sound from the beginning.
+             *
+             * The ONLY deliberate divergence from IMusic::play() : an ISound
+             * is a one-shot, not a transport. play() on a sound already
+             * playing RESTARTS it from zero - that is what lets a gunshot
+             * retrigger faster than its own duration. IMusic, by contrast,
+             * ignores a play() while playing.
+             *
+             * The difference is written here because it is intended. It
+             * cannot be guessed from the signature, and both vendors have
+             * to honour it identically.
              */
             virtual void play() = 0;
 
             /**
-             * @brief pause the sound
+             * @brief Suspends the sound without touching the position.
              *
+             * Does nothing if the sound is not playing. Idempotent.
              */
             virtual void pause() = 0;
 
             /**
-             * @brief stop the sound and reset it to the beginning
+             * @brief Stops the sound AND rewinds to zero.
              *
+             * Does nothing if the sound is already stopped. Idempotent.
              */
             virtual void stop() = 0;
 
@@ -90,5 +102,7 @@ namespace audio {
     };
 
 }
+
+/** @} */
 
 #endif /* !ISOUND_HPP_ */

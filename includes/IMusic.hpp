@@ -4,7 +4,7 @@
  * @brief
  * @date 2025-09-24
  *
- * @addtogroup audio
+ * @addtogroup iaudio
  * @{
  */
 
@@ -25,25 +25,45 @@ namespace audio {
             virtual bool isReady() const = 0;
 
             /**
-             * @brief play the music
+             * @brief Starts playback.
+             *
+             * Three states, and every action does ONLY what it says :
+             *
+             *     stopped --play()--> playing  --pause()--> paused
+             *     paused  --play()--> playing  (resumes where it was)
+             *     stopped --play()--> playing  (from zero)
+             *
+             * play() on a stream that is already playing DOES NOTHING. It
+             * does not restart from the beginning : without that rule, a
+             * play() called every frame stutters on one vendor and plays
+             * normally on the other. To restart, call stop() then play(),
+             * or setTime(0) - explicitly.
              */
             virtual void play() = 0;
 
             /**
-             * @brief pause the music
+             * @brief Suspends playback without touching the position.
              *
+             * Does nothing if the stream is not playing. Idempotent.
              */
             virtual void pause() = 0;
 
             /**
-             * @brief stop the music and reset it to the beginning
+             * @brief Stops playback AND rewinds to zero.
              *
+             * Does nothing if the stream is already stopped. Idempotent.
              */
             virtual void stop() = 0;
 
             /**
-             * @brief update the music
+             * @brief Must be called every frame.
              *
+             * On a backend that refills its buffer in a thread this is a
+             * no-op - the call stays mandatory and always valid, otherwise
+             * game code would have to know which vendor is behind it.
+             *
+             * This is also where a non-looping stream that reaches its end
+             * moves itself into the state of a stop().
              */
             virtual void update() = 0;
 
@@ -77,7 +97,12 @@ namespace audio {
             virtual bool getLoop() const = 0;
 
             /**
-             * @brief Set the time of the music in seconds
+             * @brief Set the time of the music in seconds.
+             *
+             * The position is CLAMPED to [0, getLength()] : asking past the
+             * end stops at the end, a negative value rewinds to zero.
+             * Without that rule each vendor improvises - raylib wrapped
+             * around (115s on a 109s track gave 6s) where sfml fell to 0.
              *
              * @param position
              */
@@ -132,5 +157,7 @@ namespace audio {
     };
 
 }
+
+/** @} */
 
 #endif /* !IMUSIC_HPP_ */
